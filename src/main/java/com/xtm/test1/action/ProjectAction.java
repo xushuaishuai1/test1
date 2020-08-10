@@ -1,5 +1,8 @@
 package com.xtm.test1.action;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.xtm.test1.base.CommonResult;
 import com.xtm.test1.mapper.SProjectMapper;
 import com.xtm.test1.pojo.SProject;
 import com.xtm.test1.service.ProjectService;
@@ -25,25 +28,22 @@ public class ProjectAction {
      */
     @RequestMapping("/")
     @ResponseBody
-    public String editSave(HttpServletRequest request) {
-        try {
-            SProject sProject = this.projectService.getById(5);
-            sProject.setRemark("tttttt");
-            projectService.editProject(sProject);
-            for(int i=0; i<2; i++){
-                new Thread("" + i){
-                    public void run(){
-                        sProject.setRemark(Thread.currentThread().toString());
-                        projectService.editProject(sProject);
-                    }
-                }.start();
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+    public CommonResult editSave(HttpServletRequest request) {
+        SProject sProject = new SProject();
+        sProject.setId(5);
+        sProject.setRemark("tttttt");
+        projectService.editProject(sProject);
 
-        return "success";
+
+//        for(int i=0; i<10; i++){
+//            new Thread("" + i){
+//                public void run(){
+//                    sProject.setRemark(Thread.currentThread().toString());
+//                    projectService.editProject(sProject);
+//                }
+//            }.start();
+//        }
+        return CommonResult.ok("编辑成功！");
     }
-
 
 }

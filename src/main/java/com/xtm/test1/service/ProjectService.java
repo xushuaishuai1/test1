@@ -1,9 +1,11 @@
 package com.xtm.test1.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.xtm.test1.aop.RedisLock;
+import com.xtm.test1.base.BaseServiceImpl;
 import com.xtm.test1.mapper.SProjectMapper;
 import com.xtm.test1.pojo.SProject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +18,7 @@ import java.util.List;
 
 @Service
 @Transactional(isolation= Isolation.DEFAULT,propagation= Propagation.REQUIRED,rollbackFor = Exception.class)
-public class ProjectService extends ServiceImpl<SProjectMapper, SProject> {
+public class ProjectService extends BaseServiceImpl<SProjectMapper, SProject> {
 
     @Autowired
     private SProjectMapper sProjectMapper;
@@ -43,12 +45,15 @@ public class ProjectService extends ServiceImpl<SProjectMapper, SProject> {
      */
     @RedisLock(value = "redisLockRegistry",time = 60)
     public void editProject(SProject sProject){
-        boolean  b = this.updateById(sProject);
-        if (b){
+        this.updateById_(sProject);
+    }
+
+    public void editByWrapper(UpdateWrapper updateWrapper){
+        boolean b = this.update(updateWrapper);
+        if(b){
             System.out.println("success");
-        }else{
-            System.out.println("error");
         }
+        System.out.println("error");
     }
 
 
